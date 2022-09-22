@@ -1,0 +1,10 @@
+[tool.poetry]
+name = "BaseApp"
+version = "0.0.1"
+description = "Base FastAPI app"
+authors = ["Vlasov Vsevolod <sesevasa64@gmail.com>"]
+license = "MIT"
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.85.0"
+uvicorn = {extras = ["standard"], version = "^0.17.6"}
