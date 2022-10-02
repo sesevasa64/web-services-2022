@@ -5,6 +5,12 @@ from definitions.builds.checker import CheckerBase, CheckRequest, CheckResponse,
 
 class CheckerService(CheckerBase):
     async def check(self, check_request: "CheckRequest") -> "CheckResponse":
+        """Check if point is inside a polygon
+        Args:
+            check_request (CheckRequest): Polygon and testing point.
+        Returns:
+            True for success, False otherwise.
+        """
         print(check_request)
         points = check_request.polygon.points
         point = check_request.point
@@ -16,8 +22,7 @@ class CheckerService(CheckerBase):
             x_cross = (point.y - p_j.y) / (p_j.y - p_i.y) * (p_j.x - p_i.x) + point.x
             if x_cross < point.x:
                 is_inside = not is_inside
-        response = CheckResponse(result=Result.OK, is_inside=is_inside)
-        return response
+        return CheckResponse(result=Result.OK, is_inside=is_inside)
 
 
 async def main():
