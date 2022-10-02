@@ -20,5 +20,9 @@ Run Foobar with command:
 ```console
 uvicorn app.main:app --reload
 ```
+Run tests with command:
+```console
+python -m pytest
+``` 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
