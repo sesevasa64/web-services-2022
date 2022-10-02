@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "gRPC"
+version = "0.0.1"
+description = "gRPC python app"
+authors = ["Vlasov Vsevolod <sesevasa64@gmail.com>"]
+license = "MIT"
+[tool.poetry.dependencies]
+python = "^3.9"
+grpcio  = "^1.49.1"
+grpcio-tools = "^1.49.1"
+googleapis-common-protos = "^1.56.4"
+betterproto = {extras = ["compiler"], version = "1.2.5", allow-prereleases = true}
+uvicorn = {extras = ["standard"], version = "^0.17.6"}
+[tool.poetry.dev-dependencies]
+pytest = "^7.1.3"

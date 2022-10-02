@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package checker;
+
+message Point {
+    int32 x = 1;
+    int32 y = 2;
+}
+
+message Polygon {
+    repeated Point points = 1;
+}
+
+message CheckRequest {
+    Polygon polygon = 1;
+    Point point = 2;
+}
+
+enum Result {
+    OK = 0;
+    ERROR = 1;
+}
+
+message CheckResponse {
+    Result result = 1;
+    bool isInside = 2;
+}
+
+service Checker {
+    rpc Check(CheckRequest) returns (CheckResponse);
+}
