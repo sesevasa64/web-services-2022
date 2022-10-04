@@ -1,6 +1,8 @@
 import asyncio
 from grpclib.server import Server
-from definitions.builds.checker import CheckerBase, CheckRequest, CheckResponse, Result
+from definitions.builds.checker import (
+    CheckerBase, CheckRequest, CheckResponse, Result
+)
 
 
 class CheckerService(CheckerBase):
@@ -9,17 +11,21 @@ class CheckerService(CheckerBase):
         Args:
             check_request (CheckRequest): Polygon and testing point.
         Returns:
-            True for success, False otherwise.
+            Bool: True for success, False otherwise.
         """
-        print(check_request)
+        if __debug__:
+            print(check_request)
         points = check_request.polygon.points
         point = check_request.point
+        if len(points) <= 2:
+            return CheckResponse(result=Result.ERROR)
         is_inside = False
         for i, p_i in enumerate(points):
             p_j = points[(i + 1) % len(points)]
             if not (p_i.y <= point.y < p_j.y or p_j.y <= point.y < p_i.y):
                 continue
-            x_cross = (point.y - p_j.y) / (p_j.y - p_i.y) * (p_j.x - p_i.x) + point.x
+            x_cross = (point.y - p_j.y) / (p_j.y - p_i.y) * (p_j.x - p_i.x)
+            x_cross += point.x
             if x_cross < point.x:
                 is_inside = not is_inside
         return CheckResponse(result=Result.OK, is_inside=is_inside)

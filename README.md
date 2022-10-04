@@ -22,7 +22,8 @@ uvicorn app.main:app --reload
 ```
 Run tests with command:
 ```console
-python -m pytest
+python -m pytest grpc/
+python -m pytest main-project/
 ``` 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
