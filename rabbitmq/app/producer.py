@@ -4,6 +4,10 @@ import time
 import requests
 from datetime import datetime, timedelta
 from .settings import CURRENCY_LIST, API_KEY_PATH, DELAY
+from .utils import create_logger
+
+
+logger = create_logger("producer")
 
 
 API_URL = "https://api.apilayer.com/fixer/latest"
@@ -31,6 +35,7 @@ def produce(connection: pika.BlockingConnection):
     channel.basic_publish(
         exchange='test', routing_key="queue_key", body=json.dumps(rates)
     )
+    logger.debug(f"Added message to queue with content {rates}")
 
 
 def main():
@@ -38,6 +43,7 @@ def main():
     connection = pika.BlockingConnection(con_params)
     t = datetime.strptime(DELAY, "%H:%M:%S")
     dt = timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)
+    logger.debug("Producer service started")
     try:
         while True:
             produce(connection)
@@ -45,6 +51,7 @@ def main():
     except KeyboardInterrupt:
         pass
     connection.close()
+    logger.debug("Producer service ended")
 
 
 if __name__ == "__main__":
