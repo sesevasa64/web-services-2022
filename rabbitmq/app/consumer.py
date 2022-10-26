@@ -14,11 +14,25 @@ from typing import Dict
 logger = create_logger("consumer")
 
 
-def currancy_rates_dict_to_text(data: Dict) -> str:
+def exchange_rates_dict_to_text(data: Dict[str, int]) -> str:
+    """Convert exchange rates to nice formatted text
+
+    Args:
+        data (Dict[str, int]): exchange rates
+
+    Returns:
+        str: formatted text
+    """
     return "".join([f"{key}: {val}\n" for key, val in data.items()])
 
 
 def send_email(email_to: str, data: str):
+    """Send message to specific email
+
+    Args:
+        email_to (str): user email
+        data (str): message content
+    """
     message = MIMEMultipart()
     message["From"] = SMTP_LOGIN
     message["To"] = email_to
@@ -32,20 +46,24 @@ def send_email(email_to: str, data: str):
     logger.debug(f"Succecfully sent email notification to {email_to}")
 
 
-def callback(channel, method, properties, body):
+def consume(channel, method, properties, body):
+    """Get exchange rates from queue
+    """
     rates = json.loads(body)
     logger.debug(f"Received message from queue with content {rates}")
     for email in SUBSCRIBED_EMAIL_LIST:
-        data = currancy_rates_dict_to_text(rates)
+        data = exchange_rates_dict_to_text(rates)
         send_email(email, data)
 
 
 def main():
+    """Setup pika and start consuming
+    """
     con_params = pika.ConnectionParameters('localhost')
     connection = pika.BlockingConnection(con_params)
     channel = connection.channel()
     channel.basic_consume(
-        queue='queue', auto_ack=True, on_message_callback=callback
+        queue='queue', auto_ack=True, on_message_callback=consume
     )
     logger.debug("Consumer service started")
     try:
